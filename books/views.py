@@ -58,6 +58,7 @@ def index(request):
 
 
 def detail_view(request, title):
+    is_added = False
     if request.method == 'POST':
         try:
             search = request.POST['search']
@@ -80,6 +81,7 @@ def detail_view(request, title):
             else:
                 cart_item.quantity = cart_item.quantity + 1
                 cart_item.save()
+            is_added = True
 
     qs = Book.objects.filter(title=title).get()
 
@@ -90,7 +92,7 @@ def detail_view(request, title):
             cart_items_sum += item.quantity
     else:
         cart_items_sum = 'Најави се'
-    return render(request, "book.html", {"book": qs, "cart_items": cart_items_sum})
+    return render(request, "book.html", {"book": qs, "cart_items": cart_items_sum, "added_new": is_added})
 
 
 def cart(request):
