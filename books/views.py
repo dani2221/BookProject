@@ -127,7 +127,9 @@ def checkout_view(request):
 
 
 def order_list_view(request):
-    orders = Order.objects.all().order_by('-id')
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    orders = Order.objects.filter(cart__user=request.user).order_by('-id')
 
     for order in orders:
         order.cart_items = CartItem.objects.filter(cart=order.cart)
